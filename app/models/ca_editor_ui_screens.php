@@ -503,6 +503,83 @@ class ca_editor_ui_screens extends BundlableLabelableBaseModelWithAttributes {
 						);
 					}
 					break;
+				case 'attribute_references':
+					$vs_ref_table = str_replace("_references", "", $vs_bundle);
+					if (!($t_rel = $this->_DATAMODEL->getInstanceByTableName($vs_ref_table, true))) { continue; }
+					$va_additional_settings = array(
+						'restrict_to_types' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_SELECT,
+							'useList' => $t_rel->getTypeListCode(),
+							'width' => "275px", 'height' => "75px",
+							'takesLocale' => false,
+							'default' => '',
+							'label' => _t('Restrict to types'),
+							'description' => _t('Restricts display to items of the specified type(s). Leave all unselected for no restriction.')
+						),
+						'list_format' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_SELECT,
+							'options' => array(
+								_t('bubbles (draggable)') => 'bubbles',
+								_t('list (not draggable)') => 'list'
+							),
+							'default' => 'bubbles',
+							'width' => "200px", 'height' => 1,
+							'label' => _t('Format of relationship list'),
+							'description' => _t('.')
+						),
+						'sort' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_SELECT,
+							'width' => "200px", 'height' => "1",
+							'takesLocale' => false,
+							'default' => '1',
+							'label' => _t('Sort using'),
+							'showSortableBundlesFor' => $t_rel->tableName(),
+							'description' => _t('Method used to sort related items.')
+						),
+						'sortDirection' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_SELECT,
+							'width' => "200px", 'height' => "1",
+							'takesLocale' => false,
+							'default' => 'ASC',
+							'options' => array(
+								_t('Ascending') => 'ASC',
+								_t('Descending') => 'DESC'
+							),
+							'label' => _t('Sort direction'),
+							'description' => _t('Direction of sort, when not in a user-specified order.')
+						),
+						'colorFirstItem' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_COLORPICKER,
+							'width' => "10", 'height' => "1",
+							'takesLocale' => false,
+							'default' => '',
+							'label' => _t('First item color'),
+							'description' => _t('If set first item in list will use this color.')
+						),
+						'colorLastItem' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_COLORPICKER,
+							'width' => "10", 'height' => "1",
+							'takesLocale' => false,
+							'default' => '',
+							'label' => _t('Last item color'),
+							'description' => _t('If set last item in list will use this color.')
+						),
+						'display_template' => array(
+							'formatType' => FT_TEXT,
+							'displayType' => DT_FIELD,
+							'default' => '^'.$t_rel->tableName().'.preferred_labels',
+							'width' => "275px", 'height' => 4,
+							'label' => _t('Relationship display template'),
+							'description' => _t('Layout for relationship when displayed in list (can include HTML). Element code tags prefixed with the ^ character can be used to represent the value in the template. For example: <i>^my_element_code</i>.')
+						)
+					);
+					break;
 				case 'related_table':
 					if (!($t_rel = $this->_DATAMODEL->getInstanceByTableName($vs_bundle, true))) { continue; }
 					$va_path = array_keys($this->_DATAMODEL->getPath($t_instance->tableName(), $vs_bundle));

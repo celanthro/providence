@@ -1633,6 +1633,18 @@ class BundlableLabelableBaseModelWithAttributes extends LabelableBaseModelWithAt
 		
 				break;
 			# -------------------------------------------------
+			case 'attribute_references':
+				$vs_display_format = $o_config->get('bundle_element_display_format');
+				if (!$vs_label_text) { $vs_label_text = $va_info['label']; }				
+				$vs_label = '<span class="formLabelText" id="'.$pa_options['formName'].'_'.$ps_placement_code.'">'.$vs_label_text.'</span>'; 
+				$vs_element = $this->getAttributeReferenceHTMLFormBundle($pa_options['request'], $pa_options['formName'], $ps_placement_code, $pa_bundle_settings, $pa_options);	
+				
+				
+				if (($vs_label_text) && ($vs_description)) {
+					TooltipManager::add('#'.$vs_field_id, "<h3>{$vs_label_text}</h3>{$vs_description}");
+				}
+				break;
+			# -------------------------------------------------
 			case 'related_table':
 				if (is_array($va_error_objects = $pa_options['request']->getActionErrors($ps_bundle_name, 'general')) && sizeof($va_error_objects)) {
 					$vs_display_format = $o_config->get('bundle_element_error_display_format');

@@ -1545,6 +1545,38 @@
 		}
 		# ------------------------------------------------------------------
 		/**
+		 * Get HTML form element bundle for metadata element
+		 *
+		 */
+		public function getAttributeReferenceHTMLFormBundle($po_request, $ps_form_name, $ps_placement_code, $pa_bundle_settings, $pa_options) {
+			
+			if (!is_array($pa_options)) { $pa_options = array(); }
+			if (!is_array($pa_bundle_settings)) { $pa_bundle_settings = array(); }
+			
+			$vb_batch = (isset($pa_options['batch']) && $pa_options['batch']) ? true : false;
+				
+			$vs_view_path = (isset($pa_options['viewPath']) && $pa_options['viewPath']) ? $pa_options['viewPath'] : $po_request->getViewsDirectoryPath();
+			$o_view = new View($po_request, "{$vs_view_path}/bundles/");
+			
+			$o_view->setVar('t_instance', $this);
+			$o_view->setVar('request', $po_request);
+			$o_view->setVar('id_prefix', $ps_form_name.'_ca_attribute_references');
+			$o_view->setVar('placement_code', $ps_placement_code);
+			
+			// get all metadata elements the reference this			
+			$o_view->setVar('reference_list', $this->getAuthorityElementReferences());
+			
+
+			// pass bundle settings to view
+			$o_view->setVar('settings', $pa_bundle_settings);
+			
+			// Is this being used in the batch editor?
+			$o_view->setVar('batch', (bool)(isset($pa_options['batch']) && $pa_options['batch']));
+			
+			return $o_view->render('ca_attribute_references.php');
+		}
+		# ------------------------------------------------------------------
+		/**
 		 *
 		 */
 		public function htmlFormElementForAttributeSearch($po_request, $pm_element_code_or_id, $pa_options=null) {
@@ -2281,9 +2313,8 @@
 				FROM ca_attribute_values cav
 				INNER JOIN ca_attributes AS a ON a.attribute_id = cav.attribute_id
 				WHERE
-					cav.element_id IN (SELECT element_id FROM ca_metadata_elements WHERE datatype = ?) AND cav.value_integer1 = ?
+					cav.element_id IN (SELECT element_id FROM ca_metadata_elements WHERE datatype = ?) AND ".(($vn_datatype == 3) ? "cav.item_id = ?" : "cav.value_integer1 = ?")."
 			", array($vn_datatype, $vn_id));
-			
 			
 			$va_references = array();
 			

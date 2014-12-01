@@ -400,6 +400,9 @@ class ca_list_items extends RepresentableBaseModel implements IHierarchy {
 		$this->BUNDLES['ca_collections'] = array('type' => 'related_table', 'repeating' => true, 'label' => _t('Related collections'));
 		$this->BUNDLES['ca_storage_locations'] = array('type' => 'related_table', 'repeating' => true, 'label' => _t('Related storage locations'));
 		
+		
+		$this->BUNDLES['ca_objects_references'] = array('type' => 'attribute_references', 'repeating' => false, 'label' => _t('Object references'));
+		
 		$this->BUNDLES['ca_loans'] = array('type' => 'related_table', 'repeating' => true, 'label' => _t('Related loans'));
 		$this->BUNDLES['ca_movements'] = array('type' => 'related_table', 'repeating' => true, 'label' => _t('Related movements'));
 		
